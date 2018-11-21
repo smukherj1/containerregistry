@@ -32,6 +32,7 @@ from containerregistry.client.v2_2 import save
 from containerregistry.client.v2_2 import v2_compat
 from containerregistry.tools import logging_setup
 from containerregistry.tools import patched
+from containerregistry.tools import platform_args
 from containerregistry.transport import retry
 from containerregistry.transport import transport_pool
 
@@ -52,10 +53,7 @@ parser.add_argument(
     '--directory', action='store', help='Where to save the image\'s files.',
     required=True)
 
-parser.add_argument(
-    '--platform', action='store', default='linux/amd64',
-    help=('Which platform image to pull for multi-platform manifest lists. '
-          'Formatted as os/arch.'))
+platform_args.AddArguments(parser)
 
 _THREADS = 8
 
@@ -64,12 +62,6 @@ def main():
   logging_setup.DefineCommandLineArgs(parser)
   args = parser.parse_args()
   logging_setup.Init(args=args)
-
-  if '/' not in args.platform:
-    logging.fatal('--platform must be specified in os/arch format.')
-    sys.exit(1)
-
-  os, arch = args.platform.split('/', 1)
 
   retry_factory = retry.Factory()
   retry_factory = retry_factory.WithSourceTransportCallable(httplib2.Http)
@@ -102,10 +94,7 @@ def main():
     logging.info('Pulling manifest list from %r ...', name)
     with image_list.FromRegistry(name, creds, transport) as img_list:
       if img_list.exists():
-        platform = image_list.Platform({
-            'architecture': arch,
-            'os': os,
-        })
+        platform = platform_args.FromArgs(args)
         # pytype: disable=wrong-arg-types
         with img_list.resolve(platform) as default_child:
           save.fast(default_child, args.directory, threads=_THREADS)
