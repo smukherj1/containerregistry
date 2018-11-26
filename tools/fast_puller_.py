@@ -57,6 +57,12 @@ parser.add_argument(
     help=('Which platform image to pull for multi-platform manifest lists. '
           'Formatted as os/arch.'))
 
+parser.add_argument(
+    '--client-config-dir',
+    action='store',
+    help='The path to the directory where the client configuration files are '
+    'located. Overiddes the value from DOCKER_CONFIG')
+
 _THREADS = 8
 
 
@@ -79,6 +85,9 @@ def main():
     name = docker_name.Digest(args.name)
   else:
     name = docker_name.Tag(args.name)
+
+  if args.client_config_dir is not None:
+    docker_creds.DefaultKeychain.setCustomConfigDir(args.client_config_dir)
 
   # OCI Image Manifest is compatible with Docker Image Manifest Version 2,
   # Schema 2. We indicate support for both formats by passing both media types

@@ -78,6 +78,12 @@ parser.add_argument(
           'to make in the provided --name, e.g. {BUILD_USER}'))
 
 parser.add_argument(
+    '--client-config-dir',
+    action='store',
+    help='The path to the directory where the client configuration files are '
+    'located. Overiddes the value from DOCKER_CONFIG')
+
+parser.add_argument(
     '--oci', action='store_true', help='Push the image with an OCI Manifest.')
 
 _THREADS = 8
@@ -123,6 +129,9 @@ def main():
   if not args.config and not args.tarball:
     logging.fatal('Either --config or --tarball must be specified.')
     sys.exit(1)
+
+  if args.client_config_dir is not None:
+    docker_creds.DefaultKeychain.setCustomConfigDir(args.client_config_dir)
 
   # If config is specified, use that.  Otherwise, fallback on reading
   # the config from the tarball.
