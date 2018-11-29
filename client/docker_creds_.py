@@ -241,8 +241,8 @@ class _DefaultKeychain(Keychain):
     # Override the configuration directory where the docker configuration
     # JSON is searched for
     if not os.path.isdir(config_dir):
-      raise Exception("Attempting to override docker configuration directory" +\
-      " to invalid directory: {}".format(config_dir))
+      raise Exception('Attempting to override docker configuration directory'
+                      ' to invalid directory: {}'.format(config_dir))
     self._config_dir = config_dir
 
   def Resolve(self, name):

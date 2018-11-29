@@ -86,6 +86,12 @@ def main():
   else:
     name = docker_name.Tag(args.name)
 
+  # If the user provided a client config directory, instruct the keychain
+  # resolver to use it to look for the docker client config
+  if args.client_config_dir is not None:
+    docker_creds.DefaultKeychain.setCustomConfigDir(args.client_config_dir)
+
+
   if args.client_config_dir is not None:
     docker_creds.DefaultKeychain.setCustomConfigDir(args.client_config_dir)
 

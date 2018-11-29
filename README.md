@@ -34,6 +34,7 @@ $ bazel run @containerregistry//:puller.par -- --help
 
 ```
 usage: puller.par [-h] --name NAME --directory DIRECTORY [--platform PLATFORM]
+                  [--client-config-dir CLIENT_CONFIG_DIR]
                   [--stderrthreshold STDERRTHRESHOLD]
 
 Pull images from a Docker Registry, faaaaast.
@@ -59,7 +60,8 @@ $ bazel run @containerregistry//:pusher.par -- --help
 ```
 usage: pusher.par [-h] --name NAME [--tarball TARBALL] [--config CONFIG]
                   [--manifest MANIFEST] [--digest DIGEST] [--layer LAYER]
-                  [--stamp-info-file STAMP_INFO_FILE] [--oci]
+                  [--stamp-info-file STAMP_INFO_FILE]
+                  [--client-config-dir CLIENT_CONFIG_DIR] [--oci]
                   [--stderrthreshold STDERRTHRESHOLD]
 
 Push images to a Docker Registry, faaaaaast.

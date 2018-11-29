@@ -130,9 +130,6 @@ def main():
     logging.fatal('Either --config or --tarball must be specified.')
     sys.exit(1)
 
-  if args.client_config_dir is not None:
-    docker_creds.DefaultKeychain.setCustomConfigDir(args.client_config_dir)
-
   # If config is specified, use that.  Otherwise, fallback on reading
   # the config from the tarball.
   config = args.config
@@ -153,6 +150,11 @@ def main():
   if len(args.digest or []) != len(args.layer or []):
     logging.fatal('--digest and --layer must have matching lengths.')
     sys.exit(1)
+
+  # If the user provided a client config directory, instruct the keychain
+  # resolver to use it to look for the docker client config
+  if args.client_config_dir is not None:
+    docker_creds.DefaultKeychain.setCustomConfigDir(args.client_config_dir)
 
   retry_factory = retry.Factory()
   retry_factory = retry_factory.WithSourceTransportCallable(httplib2.Http)
